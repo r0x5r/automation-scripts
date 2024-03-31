@@ -1,3 +1,5 @@
+#!/bin/bash
+
 ff_parallel() {
     if [ $# -ne 2 ]; then
         echo "Usage: ff_parallel <input_file> <output_directory>"
@@ -22,6 +24,15 @@ ff_parallel() {
         domain=$(echo "$url" | sed -e 's|http://||' -e 's|https://||' -e 's|www.||' -e 's|/.*||')
 
         # Perform fuzzing using ffuf with specified wordlist
-        ffuf -w wordlists/seclists/Fuzzing/fuzz-Bo0oM.txt -u "${url}/FUZZ" -mc 200 > "${output_dir}/${domain}_output.txt"
+        ffuf -w ~/wordlists/seclists/Fuzzing/fuzz-Bo0oM.txt -u "${url}/FUZZ" -mc 200 > "${output_dir}/${domain}_output.txt"
     done < "$input_file"
 }
+
+# Check if correct number of arguments are provided
+if [ $# -ne 2 ]; then
+    echo "Usage: $0 <input_file> <output_directory>"
+    exit 1
+fi
+
+# Call the function with command-line arguments
+ff_parallel "$1" "$2"
